@@ -200,7 +200,8 @@ public class TesteAdicionarUsuario {
 
     UsuarioDto usuario = TesteUtil.criarUsuario(firstName, lastName, null, password, telefones);
 
-    String[] listaEmailsInvalidos = { "saulo", "saulo@", "@pitang.com.br", "saulo@pitang" };
+    String[] listaEmailsInvalidos = { "saulo", "saulo@", "@pitang.com.br", "saulo@pitang", "saulo@pitang.",
+        "34343@879788.00", "saulo@pitang.c", "saulo@pitang.comcomcom" };
 
     for (String emailInvalido : listaEmailsInvalidos) {
 
