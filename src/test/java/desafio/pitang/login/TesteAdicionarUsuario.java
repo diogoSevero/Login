@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import desafio.pitang.dao.UsuarioDao;
 import desafio.pitang.dto.TelefoneDto;
-import desafio.pitang.dto.TokenDto;
 import desafio.pitang.dto.UsuarioDto;
 import desafio.pitang.enumeration.TipoErroAutenticacao;
 import desafio.pitang.excecoes.AutenticacaoException;
+import desafio.pitang.model.Usuario;
 import desafio.pitang.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
@@ -27,11 +28,14 @@ public class TesteAdicionarUsuario {
   @Autowired
   UsuarioService usuarioService;
 
+  @Autowired
+  UsuarioDao usuarioDao;
+
   @Test
   public void testeAdicionarUsuario() {
 
     UsuarioDto usuarioBefore = null;
-    UsuarioDto usuarioAfter = null;
+    Usuario usuarioAfter = null;
 
     String firstName = "José";
     String lastName = "da Silva";
@@ -43,23 +47,52 @@ public class TesteAdicionarUsuario {
     usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      TokenDto token = usuarioService.adicionarUsuario(usuarioBefore);
-      usuarioAfter = usuarioService.recuperarUsuario(token.getToken().replace("Bearer ", ""));
+      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioAfter = usuarioDao.findUsuarioByEmail(email);
 
       assertTrue("First name does not match before and after saving",
-          usuarioBefore.getFirstName().equals(usuarioAfter.getFirstName()));
+          usuarioBefore.getFirstName().equals(usuarioAfter.getNome()));
       assertTrue("Last name does not match before and after saving",
-          usuarioBefore.getLastName().equals(usuarioAfter.getLastName()));
+          usuarioBefore.getLastName().equals(usuarioAfter.getSobrenome()));
       assertTrue("Email does not match before and after saving",
           usuarioBefore.getEmail().equals(usuarioAfter.getEmail()));
       assertFalse("Password shouldnt match before and after saving",
-          usuarioBefore.getPassword().equals(usuarioAfter.getPassword()));
+          usuarioBefore.getPassword().equals(usuarioAfter.getSenha()));
 
-      assertFalse("Created at should not be null", usuarioAfter.getCreated_at() == null);
-      assertTrue("Last login is not set yet", usuarioAfter.getLast_login() == null);
+      assertFalse("Created at should not be null", usuarioAfter.getDataCriacao() == null);
+      assertTrue("Last login should not be set yet", usuarioAfter.getDataUltimoLogin() == null);
 
     } catch (AutenticacaoException e) {
-      fail(String.format("Erro de autenticação: %s", e.getMessage()));
+      fail(String.format("Authentication error: %s", e.getMessage()));
+    }
+  }
+
+  @Test
+  public void testeAdicionarUsuarioExistente() {
+
+    String firstName = "Rodrigo";
+    String lastName = "de Almeida";
+    String email = "rodrigodealmeida@pitang.com.br";
+    String password = "r0dr1g0";
+    List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
+    telefones.add(TesteUtil.criarTelefone(12345, 81, "+55"));
+
+    UsuarioDto usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+
+    try {
+      usuarioService.adicionarUsuario(usuario);
+
+    } catch (AutenticacaoException e) {
+      fail(String.format("Authentication error: %s", e.getMessage()));
+    }
+
+    try {
+      usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed an already existing user");
+
+    } catch (AutenticacaoException e) {
+      assertTrue("It should have thrown 'E-mail already exists' error",
+          e.getTipoErroAutenticacao() == TipoErroAutenticacao.USUARIO_EXISTENTE);
     }
   }
 
@@ -77,6 +110,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed empty first name");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for empty first name",
@@ -98,6 +132,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed first name null");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for first name null",
@@ -119,6 +154,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed empty last name");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for empty last name",
@@ -140,6 +176,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed last name null");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for last name null",
@@ -161,6 +198,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed empty email");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for empty email",
@@ -182,6 +220,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed email null");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for email null",
@@ -230,6 +269,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed empty password");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for empty password",
@@ -251,6 +291,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed password null");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for password null",
@@ -271,6 +312,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed empty phone");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for empty phones",
@@ -291,6 +333,7 @@ public class TesteAdicionarUsuario {
 
     try {
       usuarioService.adicionarUsuario(usuario);
+      fail("It should have never passed phone null");
 
     } catch (AutenticacaoException e) {
       assertTrue("It should have thrown missing fields error for phones list null",
@@ -309,31 +352,34 @@ public class TesteAdicionarUsuario {
     UsuarioDto usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, null);
 
     TelefoneDto[] telefonesCamposFaltantes = new TelefoneDto[] { TesteUtil.criarTelefone(12345, 81, ""),
-        TesteUtil.criarTelefone(12345, 81, null), TesteUtil.criarTelefone(0, 81, ""),
-        TesteUtil.criarTelefone(12345, 0, "") };
+        TesteUtil.criarTelefone(12345, 81, null), TesteUtil.criarTelefone(0, 81, "+1"),
+        TesteUtil.criarTelefone(12345, 0, "+1") };
 
-    for (TelefoneDto telefoneDto : telefonesCamposFaltantes) {
+    for (TelefoneDto TelefoneDto : telefonesCamposFaltantes) {
 
       try {
 
         List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
-        telefones.add(telefoneDto);
+        telefones.add(TelefoneDto);
         usuario.setPhones(telefones);
         usuarioService.adicionarUsuario(usuario);
         fail("It should have never passed an invalid phone");
 
       } catch (AutenticacaoException e) {
-        assertTrue("It should have thrown invalid fields error for phone",
-            e.getTipoErroAutenticacao() == TipoErroAutenticacao.CAMPOS_INVALIDOS);
+        assertTrue("It should have thrown missing fields error for phone",
+            e.getTipoErroAutenticacao() == TipoErroAutenticacao.CAMPOS_INEXISTENTES);
       }
     }
 
-    for (TelefoneDto telefoneDto : telefonesCamposFaltantes) {
+    TelefoneDto[] telefonesCamposInvalidos = new TelefoneDto[] { TesteUtil.criarTelefone(2, 81, "+1"),
+        TesteUtil.criarTelefone(12345, 3, "+1") };
+
+    for (TelefoneDto TelefoneDto : telefonesCamposInvalidos) {
 
       try {
 
         List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
-        telefones.add(telefoneDto);
+        telefones.add(TelefoneDto);
         usuario.setPhones(telefones);
         usuarioService.adicionarUsuario(usuario);
         fail("It should have never passed an invalid phone");
