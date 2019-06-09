@@ -96,6 +96,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 		if (usuarioDTO.getLastName() == null || usuarioDTO.getLastName().equals("")) {
 			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
 		}
+		
+		if(usuarioDTO.getPhones() == null || usuarioDTO.getPhones().isEmpty()) {
+			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+		}
+		
+		for(TelefoneDTO tel : usuarioDTO.getPhones()) {
+			if(tel.getCountry_code() == null || tel.getCountry_code().isEmpty()) {
+				throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+			}
+			
+			if(tel.getArea_code() == 0 || tel.getNumber() == 0) {
+				throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+			}
+		}
 
 		Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = emailPattern.matcher(usuarioDTO.getEmail());

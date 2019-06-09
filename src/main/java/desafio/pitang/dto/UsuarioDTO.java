@@ -13,6 +13,8 @@ public class UsuarioDTO implements Serializable {
 	private String email;
 	private String password;
 	private Date created_at;
+	private Date last_login;
+	private List<TelefoneDTO> phones;
 
 	public Date getCreated_at() {
 		return created_at;
@@ -29,9 +31,6 @@ public class UsuarioDTO implements Serializable {
 	public void setLast_login(Date last_login) {
 		this.last_login = last_login;
 	}
-
-	private Date last_login;
-	private List<TelefoneDTO> phones;
 
 	public String getFirstName() {
 		return firstName;
