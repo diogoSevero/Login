@@ -12,7 +12,7 @@ Javadoc é um gerador de documentação criado pela Sun Microsystems para docume
 
 # Configurações 
 
-O deploy da aplicação foi feito no cloud service heroku. Para fazer os testes de requisições aos serviços implementados nessa aplicação, deve-se utilizar a ferramente postman e apontar para as seguintes urls:
+O deploy da aplicação foi feito no cloud service heroku. Para fazer os testes de requisições aos serviços implementados nessa aplicação, deve-se utilizar a ferramenta postman e apontar para as seguintes urls:
 
 1. Serviço /signup (cadastrar usuários) - requisição POST:
 https://pitang-desafio.herokuapp.com/signup
@@ -39,13 +39,15 @@ Parâmetro token para o serviço 3 (token gerado no passo 2):
 
 eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaW8uc2V2ZXJvQGdtYWlsLmNvbSIsImlhdCI6MTU2MDEwMjUzMiwiZXhwIjoxNTYwMTAyNjUyLCJwYXNzd29yZCI6InNlbmhhIG5vdmEifQ.qf3ERPcI_lBTs8jAogjKuaSf0BJwgDeS7dgIeB2XuB_OQDd40bAsuV7LCuA1kfGAfLgES8dWreC2N_dk6ByorA
 
-Observação: Ao executar as chamadas aos serviçoes 1 e 2, serão retornados tokens no formato: 
+Observação: Ao executar as chamadas aos serviços 1 e 2, serão retornados tokens no formato: 
 
 {
     "token": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWxpYS5sdWl6YUBnbWFpbC5jb20iLCJpYXQiOjE1NjAxMDMzNDUsImV4cCI6MTU2MDEwMzQ2NSwicGFzc3dvcmQiOiJzZW5oYSBub3ZhIn0.yS8UlQtaX6TMZlwGLtvgv-q7IgPEphIEr-HRrrlO29bWVJ_VTBYL6Drjl-9P20NInI5idttt11bSJle3wuSWSQ"
 }
 
-<b> O token em si é a string existente após o prefixo Bearer.
+<b> O token, que expira em dois minutos, em si é a string existente após o prefixo Bearer. No caso, o que segue: 
+
+eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWxpYS5sdWl6YUBnbWFpbC5jb20iLCJpYXQiOjE1NjAxMDMzNDUsImV4cCI6MTU2MDEwMzQ2NSwicGFzc3dvcmQiOiJzZW5oYSBub3ZhIn0.yS8UlQtaX6TMZlwGLtvgv-q7IgPEphIEr-HRrrlO29bWVJ_VTBYL6Drjl-9P20NInI5idttt11bSJle3wuSWSQ
 
 
 
