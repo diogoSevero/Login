@@ -45,13 +45,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
   private void validarCamposLogin(String email, String senha, Usuario usuario)//
       throws AutenticacaoException {
-    if (usuario == null) {
-      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
-    }
-
-    if (!descriptografiaBase64Decoder(usuario.getSenha()).equals(senha)) {
-      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
-    }
 
     if (email == null || email.equals("")) {
       throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
@@ -60,6 +53,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     if (senha == null || senha.equals("")) {
       throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
     }
+
+    if (usuario == null) {
+      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
+    }
+
+    if (!descriptografiaBase64Decoder(usuario.getSenha()).equals(senha)) {
+      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
+    }
+
   }
 
   @Override

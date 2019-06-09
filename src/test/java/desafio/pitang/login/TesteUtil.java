@@ -2,6 +2,7 @@ package desafio.pitang.login;
 
 import java.util.List;
 
+import desafio.pitang.dto.LoginDto;
 import desafio.pitang.dto.TelefoneDto;
 import desafio.pitang.dto.UsuarioDto;
 
@@ -18,6 +19,15 @@ public class TesteUtil {
     usuario.setPhones(phones);
 
     return usuario;
+  }
+
+  public static LoginDto criarLogin(String email, String password) {
+
+    LoginDto login = new LoginDto();
+    login.setEmail(email);
+    login.setPassword(password);
+
+    return login;
   }
 
   public static TelefoneDto criarTelefone(int number, int area_code, String country_code) {
