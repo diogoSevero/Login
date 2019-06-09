@@ -23,7 +23,7 @@ https://pitang-desafio.herokuapp.com/signin
 3. Serviço /me (recuperar dados do usuário logado) - requisição GET:
 https://pitang-desafio.herokuapp.com/me
 
-Como parâmetros das requisições, são utilizados json para os dois primeiros (1 e 2) e uma string que representa o token obtido no passo 2.
+Como parâmetros das requisições, são utilizados json para os dois primeiros (1 e 2) e uma string que representa o token obtido no serviço 2 para executar o serviço 3.
 
 Exemplos:
 
@@ -48,6 +48,10 @@ Observação: Ao executar as chamadas aos serviços 1 e 2, serão retornados tok
 <b> O token, que expira em dois minutos, em si é a string existente após o prefixo Bearer. No caso, o que segue: 
 
 eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWxpYS5sdWl6YUBnbWFpbC5jb20iLCJpYXQiOjE1NjAxMDMzNDUsImV4cCI6MTU2MDEwMzQ2NSwicGFzc3dvcmQiOiJzZW5oYSBub3ZhIn0.yS8UlQtaX6TMZlwGLtvgv-q7IgPEphIEr-HRrrlO29bWVJ_VTBYL6Drjl-9P20NInI5idttt11bSJle3wuSWSQ
+
+# Teste Unitários
+
+Os testes unitários foram feitos utilizando JUnit e encontram-se no diretório src/teste/java. Para rodar o teste, basta clicar como o botão direito do mouse no arquivo e selecionar a opção: run as -> JUnit Test. Foram cobertos os teste dos três serviços abarcando os cenários de sucesso e erro.
 
 
 
