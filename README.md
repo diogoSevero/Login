@@ -51,7 +51,7 @@ eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWxpYS5sdWl6YUBnbWFpbC5jb20iLCJpYXQiOjE1NjAxMDM
 
 # Teste Unitários
 
-Os testes unitários foram feitos utilizando JUnit e encontram-se no diretório src/teste/java. Para rodar o teste, basta clicar como o botão direito do mouse no arquivo e selecionar a opção: run as -> JUnit Test. Foram cobertos os teste dos três serviços abarcando os cenários de sucesso e erro.
+Os testes unitários foram feitos utilizando JUnit e encontram-se no diretório src/teste/java. Para rodar o teste, basta clicar com o botão direito do mouse no arquivo e selecionar a opção: run as -> JUnit Test. Foram cobertos os testes dos três serviços abarcando os cenários de sucesso e erro.
 
 
 
