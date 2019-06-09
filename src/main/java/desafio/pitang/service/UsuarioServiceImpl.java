@@ -221,7 +221,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     List<TelefoneDto> lista = new ArrayList<TelefoneDto>();
 
-    for (Telefone tel : usuario.getTelefones()) {
+    List<Telefone> telefones = usuario.getTelefones();
+
+    for (Telefone tel : telefones) {
       TelefoneDto telefone = new TelefoneDto();
       telefone.setArea_code(tel.getCodigoArea());
       telefone.setCountry_code(tel.getCodigoPais());
