@@ -30,7 +30,8 @@ public class UsuarioController {
    */
   @RequestMapping(value = "/signup", method = RequestMethod.POST, headers = "Accept=application/json", //
       produces = "application/json")
-  public ResponseEntity<TokenDto> cadastrarUsuario(@RequestBody UsuarioDto usuario) throws AutenticacaoException {
+  public ResponseEntity<TokenDto> cadastrarUsuario(@RequestBody UsuarioDto usuario) //
+      throws AutenticacaoException {
 
     TokenDto token = usuarioService.adicionarUsuario(usuario);
 
@@ -47,7 +48,8 @@ public class UsuarioController {
    */
   @RequestMapping(value = "/signin", method = RequestMethod.POST, headers = "Accept=application/json", //
       produces = "application/json")
-  public ResponseEntity<TokenDto> logarUsuario(@RequestBody LoginDto login) throws AutenticacaoException {
+  public ResponseEntity<TokenDto> logarUsuario(@RequestBody LoginDto login) //
+      throws AutenticacaoException {
 
     TokenDto token = usuarioService.logar(login);
 
