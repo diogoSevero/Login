@@ -23,7 +23,7 @@ https://pitang-desafio.herokuapp.com/signin
 3. Serviço /me (recuperar dados do usuário logado) - requisição GET:
 https://pitang-desafio.herokuapp.com/me
 
-Como parâmetros das requisições, são utilizados json para os dois primeiros (1 e 2) e uma string que representa o token obtido no passo 2.
+Como parâmetros das requisições, são utilizados json para os dois primeiros (1 e 2) e uma string que representa o token obtido no serviço 2 para executar o serviço 3.
 
 Exemplos:
 
