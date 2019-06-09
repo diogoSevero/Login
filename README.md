@@ -27,15 +27,15 @@ Como parâmetros das requisições, são utilizados json para os dois primeiros 
 
 Exemplos:
 
-Parâmetro json para o serviço 1:
+Parâmetro json para o serviço 1 (parâmetro passado no body no postman):
 
 {"firstName": "Julia", "lastName": "Luiza","email":"julia.luiza@gmail.com", "password":"senha nova", "phones":[{"number":"44445555","area_code":"31", "country_code":"=678"},{"number": "32530024","area_code":"81", "country_code":"+55"},{"number": "99772051","area_code":"81", "country_code":"+55"}]}
 
-Parâmetro json para o serviço 2:
+Parâmetro json para o serviço 2 (parâmetro passado no body no postaman):
 
 {"email":"dio.severo@gmail.com", "password":"senha nova"}
 
-Parâmetro token para o serviço 3 (token gerado no passo 2): 
+Parâmetro token para o serviço 3 (token gerado no passo 2) passado como parâmetro na url:
 
 eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaW8uc2V2ZXJvQGdtYWlsLmNvbSIsImlhdCI6MTU2MDEwMjUzMiwiZXhwIjoxNTYwMTAyNjUyLCJwYXNzd29yZCI6InNlbmhhIG5vdmEifQ.qf3ERPcI_lBTs8jAogjKuaSf0BJwgDeS7dgIeB2XuB_OQDd40bAsuV7LCuA1kfGAfLgES8dWreC2N_dk6ByorA
 
