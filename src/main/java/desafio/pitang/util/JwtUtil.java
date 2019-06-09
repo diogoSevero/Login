@@ -3,8 +3,8 @@ package desafio.pitang.util;
 import java.util.Calendar;
 import java.util.Date;
 
+import desafio.pitang.enumeration.TipoErroAutenticacao;
 import desafio.pitang.excecoes.AutenticacaoException;
-import desafio.pitang.excecoes.AutenticacaoException.TipoErroAutenticacao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

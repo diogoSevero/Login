@@ -17,8 +17,8 @@ import desafio.pitang.dto.LoginDto;
 import desafio.pitang.dto.TelefoneDto;
 import desafio.pitang.dto.TokenDto;
 import desafio.pitang.dto.UsuarioDto;
+import desafio.pitang.enumeration.TipoErroAutenticacao;
 import desafio.pitang.excecoes.AutenticacaoException;
-import desafio.pitang.excecoes.AutenticacaoException.TipoErroAutenticacao;
 import desafio.pitang.model.Telefone;
 import desafio.pitang.model.Usuario;
 import desafio.pitang.util.JwtUtil;
@@ -125,7 +125,7 @@ public class UsuarioServiceImpl implements UsuarioService {
       throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INVALIDOS);
     }
 
-    Pattern telefonePattern = Pattern.compile("^[0-9]+$", Pattern.CASE_INSENSITIVE);
+    Pattern telefonePattern = Pattern.compile("^[0-9]+[0-9]+$", Pattern.CASE_INSENSITIVE);
     List<TelefoneDto> lista = usuarioDto.getPhones();
     for (TelefoneDto tel : lista) {
       Matcher matcherNumber = telefonePattern.matcher(String.valueOf(tel.getNumber()));
