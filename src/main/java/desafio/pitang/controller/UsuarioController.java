@@ -9,44 +9,68 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import desafio.pitang.dto.LoginDTO;
-import desafio.pitang.dto.TokenDTO;
-import desafio.pitang.dto.UsuarioDTO;
+import desafio.pitang.dto.LoginDto;
+import desafio.pitang.dto.TokenDto;
+import desafio.pitang.dto.UsuarioDto;
 import desafio.pitang.excecoes.AutenticacaoException;
 import desafio.pitang.service.UsuarioService;
 
 @RestController
 public class UsuarioController {
 
-	@Autowired
-	UsuarioService usuarioService;
+  @Autowired
+  UsuarioService usuarioService;
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST, headers = "Accept=application/json", produces = "application/json")
-	public ResponseEntity<TokenDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuario) throws AutenticacaoException {
+  /**
+   * Método que representa o endpoint para o cadastro de usuário.
+   * 
+   * @param usuario
+   * @return
+   * @throws AutenticacaoException.
+   */
+  @RequestMapping(value = "/signup", method = RequestMethod.POST, headers = "Accept=application/json", //
+      produces = "application/json")
+  public ResponseEntity<TokenDto> cadastrarUsuario(@RequestBody UsuarioDto usuario) throws AutenticacaoException {
 
-		TokenDTO token = usuarioService.adicionarUsuario(usuario);
+    TokenDto token = usuarioService.adicionarUsuario(usuario);
 
-		return new ResponseEntity<TokenDTO>(token, HttpStatus.CREATED);
+    return new ResponseEntity<TokenDto>(token, HttpStatus.CREATED);
 
-	}
+  }
 
-	@RequestMapping(value = "/signin", method = RequestMethod.POST, headers = "Accept=application/json", produces = "application/json")
-	public ResponseEntity<TokenDTO> logarUsuario(@RequestBody LoginDTO login) throws AutenticacaoException {
+  /**
+   * Método que representa o endpoint para o login de usuário.
+   * 
+   * @param login
+   * @return
+   * @throws AutenticacaoException.
+   */
+  @RequestMapping(value = "/signin", method = RequestMethod.POST, headers = "Accept=application/json", //
+      produces = "application/json")
+  public ResponseEntity<TokenDto> logarUsuario(@RequestBody LoginDto login) throws AutenticacaoException {
 
-		TokenDTO token = usuarioService.logar(login);
+    TokenDto token = usuarioService.logar(login);
 
-		return new ResponseEntity<TokenDTO>(token, HttpStatus.OK);
+    return new ResponseEntity<TokenDto>(token, HttpStatus.OK);
 
-	}
+  }
 
-	@RequestMapping(value = "/me", method = RequestMethod.GET, headers = "Accept=application/json", produces = "application/json")
-	public ResponseEntity<UsuarioDTO> getUsuario(@RequestParam(value = "token") String token)
-			throws AutenticacaoException {
+  /**
+   * Método que representa o endpoint para recuperar dados do usuário logado.
+   * 
+   * @param token
+   * @return
+   * @throws AutenticacaoException.
+   */
+  @RequestMapping(value = "/me", method = RequestMethod.GET, headers = "Accept=application/json", //
+      produces = "application/json")
+  public ResponseEntity<UsuarioDto> getUsuario(@RequestParam(value = "token") String token)
+      throws AutenticacaoException {
 
-		UsuarioDTO usuario = usuarioService.recuperarUsuario(token);
+    UsuarioDto usuario = usuarioService.recuperarUsuario(token);
 
-		return new ResponseEntity<UsuarioDTO>(usuario, HttpStatus.OK);
+    return new ResponseEntity<UsuarioDto>(usuario, HttpStatus.OK);
 
-	}
+  }
 
 }

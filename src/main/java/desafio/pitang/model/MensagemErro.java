@@ -4,30 +4,31 @@ import java.util.Date;
 
 public class MensagemErro {
 
-	private Date timestamp;
-	private String mensagem;
-	
-	public MensagemErro() {}
-	
-	public MensagemErro(Date timestamp, String mensagem) {
-		this.timestamp = timestamp;
-		this.mensagem = mensagem;
-	}
+  private Date timestamp;
+  private String mensagem;
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+  public MensagemErro() {
+  }
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+  public MensagemErro(Date timestamp, String mensagem) {
+    this.timestamp = timestamp;
+    this.mensagem = mensagem;
+  }
 
-	public String getMensagem() {
-		return mensagem;
-	}
+  public Date getTimestamp() {
+    return timestamp;
+  }
 
-	public void setMensagem(String mensagem) {
-		this.mensagem = mensagem;
-	}
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public String getMensagem() {
+    return mensagem;
+  }
+
+  public void setMensagem(String mensagem) {
+    this.mensagem = mensagem;
+  }
 
 }

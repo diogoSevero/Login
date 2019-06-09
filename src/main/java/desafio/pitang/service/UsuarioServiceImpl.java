@@ -12,11 +12,11 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import desafio.pitang.dao.UsuarioDAO;
-import desafio.pitang.dto.LoginDTO;
-import desafio.pitang.dto.TelefoneDTO;
-import desafio.pitang.dto.TokenDTO;
-import desafio.pitang.dto.UsuarioDTO;
+import desafio.pitang.dao.UsuarioDao;
+import desafio.pitang.dto.LoginDto;
+import desafio.pitang.dto.TelefoneDto;
+import desafio.pitang.dto.TokenDto;
+import desafio.pitang.dto.UsuarioDto;
 import desafio.pitang.excecoes.AutenticacaoException;
 import desafio.pitang.excecoes.AutenticacaoException.TipoErroAutenticacao;
 import desafio.pitang.model.Telefone;
@@ -26,201 +26,231 @@ import desafio.pitang.util.JwtUtil;
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-	@Autowired
-	UsuarioDAO usuarioDao;
+  @Autowired
+  UsuarioDao usuarioDao;
 
-	@Override
-	@Transactional
-	public TokenDTO logar(LoginDTO loginDTO) throws AutenticacaoException {
-		Usuario usuario = usuarioDao.findUsuarioByEmail(loginDTO.getEmail());
+  @Override
+  @Transactional
+  public TokenDto logar(LoginDto loginDto) throws AutenticacaoException {
+    Usuario usuario = usuarioDao.findUsuarioByEmail(loginDto.getEmail());
 
-		validarCamposLogin(loginDTO.getEmail(), loginDTO.getPassword(), usuario);
-		Date dataLogin = new Date();
-		usuario.setDataUltimoLogin(dataLogin);
-		usuarioDao.save(usuario);
+    validarCamposLogin(loginDto.getEmail(), loginDto.getPassword(), usuario);
+    Date dataLogin = new Date();
+    usuario.setDataUltimoLogin(dataLogin);
+    usuarioDao.save(usuario);
 
-		String token = JwtUtil.generateToken(loginDTO.getEmail(), loginDTO.getPassword());
-		return new TokenDTO(token);
-	}
+    String token = JwtUtil.generateToken(loginDto.getEmail(), loginDto.getPassword());
+    return new TokenDto(token);
+  }
 
-	private void validarCamposLogin(String email, String senha, Usuario usuario) throws AutenticacaoException {
-		if (usuario == null) {
-			throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
-		}
+  private void validarCamposLogin(String email, String senha, Usuario usuario)//
+      throws AutenticacaoException {
+    if (usuario == null) {
+      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
+    }
 
-		if (!descriptografiaBase64Decoder(usuario.getSenha()).equals(senha)) {
-			throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
-		}
+    if (!descriptografiaBase64Decoder(usuario.getSenha()).equals(senha)) {
+      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_INEXISTENTE_SENHA_ERRADA);
+    }
 
-		if (email == null || email.equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
+    if (email == null || email.equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		if (senha == null || senha.equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
-	}
+    if (senha == null || senha.equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
+  }
 
-	@Override
-	@Transactional
-	public TokenDTO adicionarUsuario(UsuarioDTO usuarioDTO) throws AutenticacaoException {
+  @Override
+  @Transactional
+  public TokenDto adicionarUsuario(UsuarioDto usuarioDto) throws AutenticacaoException {
 
-		validarCamposCadastrar(usuarioDTO);
-		Usuario user = converterUsuarioDtoParaUsuarioEntidade(usuarioDTO);
-		user = usuarioDao.save(user);
+    validarCamposCadastrar(usuarioDto);
+    Usuario user = converterUsuarioDtoParaUsuarioEntidade(usuarioDto);
+    user = usuarioDao.save(user);
 
-		String token = JwtUtil.generateToken(usuarioDTO.getEmail(), usuarioDTO.getPassword());
-		return new TokenDTO(token);
-	}
+    String token = JwtUtil.generateToken(usuarioDto.getEmail(), usuarioDto.getPassword());
+    return new TokenDto(token);
+  }
 
-	public void validarCamposCadastrar(UsuarioDTO usuarioDTO) throws AutenticacaoException {
+  /**
+   * Método que trata das validações ao cadastrar um uusário.
+   * 
+   * @param usuarioDto
+   * @throws AutenticacaoException
+   */
+  public void validarCamposCadastrar(UsuarioDto usuarioDto) throws AutenticacaoException {
 
-		Usuario usuario = usuarioDao.findUsuarioByEmail(usuarioDTO.getEmail());
+    Usuario usuario = usuarioDao.findUsuarioByEmail(usuarioDto.getEmail());
 
-		if (usuario != null) {
-			throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_EXISTENTE);
-		}
+    if (usuario != null) {
+      throw new AutenticacaoException(TipoErroAutenticacao.USUARIO_EXISTENTE);
+    }
 
-		if (usuarioDTO.getEmail() == null || usuarioDTO.getEmail().equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
+    if (usuarioDto.getEmail() == null || usuarioDto.getEmail().equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		if (usuarioDTO.getPassword() == null || usuarioDTO.getPassword().equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
+    if (usuarioDto.getPassword() == null || usuarioDto.getPassword().equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		if (usuarioDTO.getFirstName() == null || usuarioDTO.getFirstName().equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
+    if (usuarioDto.getFirstName() == null || usuarioDto.getFirstName().equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		if (usuarioDTO.getLastName() == null || usuarioDTO.getLastName().equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
-		
-		if(usuarioDTO.getPhones() == null || usuarioDTO.getPhones().isEmpty()) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-		}
-		
-		for(TelefoneDTO tel : usuarioDTO.getPhones()) {
-			if(tel.getCountry_code() == null || tel.getCountry_code().isEmpty()) {
-				throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-			}
-			
-			if(tel.getArea_code() == 0 || tel.getNumber() == 0) {
-				throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
-			}
-		}
+    if (usuarioDto.getLastName() == null || usuarioDto.getLastName().equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-		Matcher matcher = emailPattern.matcher(usuarioDTO.getEmail());
-		if (!matcher.matches()) {
-			throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INVALIDOS);
-		}
+    if (usuarioDto.getPhones() == null || usuarioDto.getPhones().isEmpty()) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+    }
 
-		Pattern telefonePattern = Pattern.compile("^[0-9]+$", Pattern.CASE_INSENSITIVE);
-		List<TelefoneDTO> lista = usuarioDTO.getPhones();
-		for (TelefoneDTO tel : lista) {
-			Matcher matcherNumber = telefonePattern.matcher(String.valueOf(tel.getNumber()));
-			Matcher matcherAreaCode = telefonePattern.matcher(String.valueOf(tel.getArea_code()));
-			if (!matcherNumber.matches() || !matcherAreaCode.matches()) {
-				throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INVALIDOS);
-			}
-		}
+    for (TelefoneDto tel : usuarioDto.getPhones()) {
+      if (tel.getCountry_code() == null || tel.getCountry_code().isEmpty()) {
+        throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+      }
 
-	}
+      if (tel.getArea_code() == 0 || tel.getNumber() == 0) {
+        throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INEXISTENTES);
+      }
+    }
 
-	public Usuario converterUsuarioDtoParaUsuarioEntidade(desafio.pitang.dto.UsuarioDTO usuarioTransfer) {
+    Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", //
+        Pattern.CASE_INSENSITIVE);
+    Matcher matcher = emailPattern.matcher(usuarioDto.getEmail());
+    if (!matcher.matches()) {
+      throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INVALIDOS);
+    }
 
-		Usuario usuario = new Usuario();
+    Pattern telefonePattern = Pattern.compile("^[0-9]+$", Pattern.CASE_INSENSITIVE);
+    List<TelefoneDto> lista = usuarioDto.getPhones();
+    for (TelefoneDto tel : lista) {
+      Matcher matcherNumber = telefonePattern.matcher(String.valueOf(tel.getNumber()));
+      Matcher matcherAreaCode = telefonePattern.matcher(String.valueOf(tel.getArea_code()));
+      if (!matcherNumber.matches() || !matcherAreaCode.matches()) {
+        throw new AutenticacaoException(TipoErroAutenticacao.CAMPOS_INVALIDOS);
+      }
+    }
 
-		if (usuarioTransfer != null) {
-			usuario.setNome(usuarioTransfer.getFirstName());
-			usuario.setSobrenome(usuarioTransfer.getLastName());
-			usuario.setEmail(usuarioTransfer.getEmail());
-			usuario.setSenha(criptografiaBase64Encoder(usuarioTransfer.getPassword()));
+  }
 
-			List<Telefone> listaTelefones = formarListaTelefones(usuarioTransfer, usuario);
-			usuario.setTelefones(listaTelefones);
+  /**
+   * Método que converte um objeto do tipo UsuarioDto para um objeto do tipo
+   * Usuario.
+   * 
+   * @param usuarioTransfer
+   * @return
+   */
+  public Usuario converterUsuarioDtoParaUsuarioEntidade(UsuarioDto usuarioTransfer) {
 
-		}
+    Usuario usuario = new Usuario();
 
-		Date data = new Date();
+    if (usuarioTransfer != null) {
+      usuario.setNome(usuarioTransfer.getFirstName());
+      usuario.setSobrenome(usuarioTransfer.getLastName());
+      usuario.setEmail(usuarioTransfer.getEmail());
+      usuario.setSenha(criptografiaBase64Encoder(usuarioTransfer.getPassword()));
 
-		usuario.setDataCriacao(data);
+      List<Telefone> listaTelefones = formarListaTelefones(usuarioTransfer, usuario);
+      usuario.setTelefones(listaTelefones);
 
-		return usuario;
-	}
+    }
 
-	public static String criptografiaBase64Encoder(String valor) {
+    Date data = new Date();
 
-		return new Base64().encodeToString(valor.getBytes());
-	}
+    usuario.setDataCriacao(data);
 
-	public static String descriptografiaBase64Decoder(String valorCriptografado) {
+    return usuario;
+  }
 
-		return new String(new Base64().decode(valorCriptografado));
-	}
+  public static String criptografiaBase64Encoder(String valor) {
 
-	public List<Telefone> formarListaTelefones(desafio.pitang.dto.UsuarioDTO usuarioTransfer, Usuario usuario) {
+    return new Base64().encodeToString(valor.getBytes());
+  }
 
-		List<Telefone> lista = new ArrayList<Telefone>();
+  public static String descriptografiaBase64Decoder(String valorCriptografado) {
 
-		if (usuarioTransfer.getPhones() != null && !usuarioTransfer.getPhones().isEmpty()) {
-			for (desafio.pitang.dto.TelefoneDTO tel : usuarioTransfer.getPhones()) {
-				Telefone telefone = new Telefone();
-				telefone.setCodigoArea(tel.getArea_code());
-				telefone.setCodigoPais(tel.getCountry_code());
-				telefone.setNumero(tel.getNumber());
-				telefone.setUsuario(usuario);
-				lista.add(telefone);
-			}
-		}
+    return new String(new Base64().decode(valorCriptografado));
+  }
 
-		return lista;
-	}
+  /**
+   * Método que forma a lista de objetos do tipo Telefone a partir da lista de
+   * objetos do tipo TelefoneDto.
+   * 
+   * @param usuarioTransfer
+   * @param usuario
+   * @return
+   */
+  public List<Telefone> formarListaTelefones(UsuarioDto usuarioTransfer, Usuario usuario) {
 
-	public UsuarioDTO converterUsuarioParaUsuarioDTO(Usuario usuario) {
+    List<Telefone> lista = new ArrayList<Telefone>();
 
-		UsuarioDTO usuarioDTO = new UsuarioDTO();
+    if (usuarioTransfer.getPhones() != null && !usuarioTransfer.getPhones().isEmpty()) {
+      for (desafio.pitang.dto.TelefoneDto tel : usuarioTransfer.getPhones()) {
+        Telefone telefone = new Telefone();
+        telefone.setCodigoArea(tel.getArea_code());
+        telefone.setCodigoPais(tel.getCountry_code());
+        telefone.setNumero(tel.getNumber());
+        telefone.setUsuario(usuario);
+        lista.add(telefone);
+      }
+    }
 
-		usuarioDTO.setEmail(usuario.getEmail());
-		usuarioDTO.setFirstName(usuario.getNome());
-		usuarioDTO.setLastName(usuario.getSobrenome());
-		usuarioDTO.setCreated_at(usuario.getDataCriacao());
-		usuarioDTO.setLast_login(usuario.getDataUltimoLogin());
+    return lista;
+  }
 
-		List<TelefoneDTO> lista = new ArrayList<TelefoneDTO>();
+  /**
+   * Método que converte um objeto to tipo usuário para um objeto do tipo
+   * UsuarioDto.
+   * 
+   * @param usuario
+   * @return
+   */
+  public UsuarioDto converterUsuarioParaUsuarioDto(Usuario usuario) {
 
-		for (Telefone tel : usuario.getTelefones()) {
-			TelefoneDTO telefone = new TelefoneDTO();
-			telefone.setArea_code(tel.getCodigoArea());
-			telefone.setCountry_code(tel.getCodigoPais());
-			telefone.setNumber(tel.getNumero());
-			lista.add(telefone);
-		}
+    UsuarioDto usuarioDto = new UsuarioDto();
 
-		usuarioDTO.setPhones(lista);
+    usuarioDto.setEmail(usuario.getEmail());
+    usuarioDto.setFirstName(usuario.getNome());
+    usuarioDto.setLastName(usuario.getSobrenome());
+    usuarioDto.setCreated_at(usuario.getDataCriacao());
+    usuarioDto.setLast_login(usuario.getDataUltimoLogin());
 
-		return usuarioDTO;
-	}
+    List<TelefoneDto> lista = new ArrayList<TelefoneDto>();
 
-	@Override
-	public UsuarioDTO recuperarUsuario(String token) throws AutenticacaoException {
+    for (Telefone tel : usuario.getTelefones()) {
+      TelefoneDto telefone = new TelefoneDto();
+      telefone.setArea_code(tel.getCodigoArea());
+      telefone.setCountry_code(tel.getCodigoPais());
+      telefone.setNumber(tel.getNumero());
+      lista.add(telefone);
+    }
 
-		if (token == null || token.equals("")) {
-			throw new AutenticacaoException(TipoErroAutenticacao.NAO_AUTORIZADO);
-		}
+    usuarioDto.setPhones(lista);
 
-		String email = JwtUtil.getEmail(token);
-		String senha = JwtUtil.getSenha(token);
+    return usuarioDto;
+  }
 
-		Usuario usuario = usuarioDao.findUsuarioByEmail(email);
+  @Override
+  public UsuarioDto recuperarUsuario(String token) throws AutenticacaoException {
 
-		validarCamposLogin(email, senha, usuario);
+    if (token == null || token.equals("")) {
+      throw new AutenticacaoException(TipoErroAutenticacao.NAO_AUTORIZADO);
+    }
 
-		UsuarioDTO usuarioDTO = converterUsuarioParaUsuarioDTO(usuario);
+    String email = JwtUtil.getEmail(token);
+    String senha = JwtUtil.getSenha(token);
 
-		return usuarioDTO;
-	}
+    Usuario usuario = usuarioDao.findUsuarioByEmail(email);
+
+    validarCamposLogin(email, senha, usuario);
+
+    UsuarioDto usuarioDto = converterUsuarioParaUsuarioDto(usuario);
+
+    return usuarioDto;
+  }
 
 }
