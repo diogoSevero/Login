@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import desafio.pitang.dao.UsuarioDao;
 import desafio.pitang.dto.TelefoneDto;
-import desafio.pitang.dto.TokenDto;
 import desafio.pitang.dto.UsuarioDto;
 import desafio.pitang.enumeration.TipoErroAutenticacao;
 import desafio.pitang.excecoes.AutenticacaoException;
+import desafio.pitang.model.Usuario;
 import desafio.pitang.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
@@ -27,11 +28,14 @@ public class TesteAdicionarUsuario {
   @Autowired
   UsuarioService usuarioService;
 
+  @Autowired
+  UsuarioDao usuarioDao;
+
   @Test
   public void testeAdicionarUsuario() {
 
     UsuarioDto usuarioBefore = null;
-    UsuarioDto usuarioAfter = null;
+    Usuario usuarioAfter = null;
 
     String firstName = "José";
     String lastName = "da Silva";
@@ -43,20 +47,20 @@ public class TesteAdicionarUsuario {
     usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      TokenDto token = usuarioService.adicionarUsuario(usuarioBefore);
-      usuarioAfter = usuarioService.recuperarUsuario(token.getToken().replace("Bearer ", ""));
+      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioAfter = usuarioDao.findUsuarioByEmail(email);
 
       assertTrue("First name does not match before and after saving",
-          usuarioBefore.getFirstName().equals(usuarioAfter.getFirstName()));
+          usuarioBefore.getFirstName().equals(usuarioAfter.getNome()));
       assertTrue("Last name does not match before and after saving",
-          usuarioBefore.getLastName().equals(usuarioAfter.getLastName()));
+          usuarioBefore.getLastName().equals(usuarioAfter.getSobrenome()));
       assertTrue("Email does not match before and after saving",
           usuarioBefore.getEmail().equals(usuarioAfter.getEmail()));
       assertFalse("Password shouldnt match before and after saving",
-          usuarioBefore.getPassword().equals(usuarioAfter.getPassword()));
+          usuarioBefore.getPassword().equals(usuarioAfter.getSenha()));
 
-      assertFalse("Created at should not be null", usuarioAfter.getCreated_at() == null);
-      assertTrue("Last login is not set yet", usuarioAfter.getLast_login() == null);
+      assertFalse("Created at should not be null", usuarioAfter.getDataCriacao() == null);
+      assertTrue("Last login is not set yet", usuarioAfter.getDataUltimoLogin() == null);
 
     } catch (AutenticacaoException e) {
       fail(String.format("Erro de autenticação: %s", e.getMessage()));

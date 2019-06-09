@@ -18,6 +18,7 @@ import desafio.pitang.dto.TelefoneDto;
 import desafio.pitang.dto.UsuarioDto;
 import desafio.pitang.enumeration.TipoErroAutenticacao;
 import desafio.pitang.excecoes.AutenticacaoException;
+import desafio.pitang.model.Usuario;
 import desafio.pitang.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
@@ -49,6 +50,8 @@ public class TesteLogarUsuario {
       LoginDto login = TesteUtil.criarLogin(email, password);
 
       usuarioService.logar(login);
+      Usuario usuarioAfter = usuarioDao.findUsuarioByEmail(email);
+      assertTrue("Last login should have been set", usuarioAfter.getDataUltimoLogin() != null);
 
     } catch (AutenticacaoException e) {
       fail(String.format("Authentication Error: %s", e.getMessage()));
@@ -57,7 +60,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioEmailVazio() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "José";
     String lastName = "da Silva";
@@ -66,10 +69,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(12345, 81, "+55"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin("", password);
 
@@ -83,7 +86,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioEmailNulo() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "Diogo";
     String lastName = "Severo";
@@ -92,10 +95,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(45678, 65, "+98"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin(null, password);
 
@@ -109,7 +112,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioSenhaNulo() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "Juliana";
     String lastName = "Alves";
@@ -118,10 +121,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(9876, 44, "+45"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin(email, null);
 
@@ -135,7 +138,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioSenhaVazia() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "Maria";
     String lastName = "Silva";
@@ -144,10 +147,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(987643, 23, "+22"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin(email, "");
 
@@ -161,7 +164,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioSenhaInvalida() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "José";
     String lastName = "Mariano";
@@ -170,10 +173,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(987654, 87, "+87"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin(email, "senha&&nova");
 
@@ -187,7 +190,7 @@ public class TesteLogarUsuario {
 
   @Test
   public void testLogarUsuarioEmailInvalido() {
-    UsuarioDto usuarioBefore = null;
+    UsuarioDto usuario = null;
 
     String firstName = "Thiago";
     String lastName = "Cabral";
@@ -196,10 +199,10 @@ public class TesteLogarUsuario {
     List<TelefoneDto> telefones = new ArrayList<TelefoneDto>();
     telefones.add(TesteUtil.criarTelefone(222222, 44, "+87"));
 
-    usuarioBefore = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
+    usuario = TesteUtil.criarUsuario(firstName, lastName, email, password, telefones);
 
     try {
-      usuarioService.adicionarUsuario(usuarioBefore);
+      usuarioService.adicionarUsuario(usuario);
 
       LoginDto login = TesteUtil.criarLogin("thiago.cabraal@pitang.com.br", password);
 
